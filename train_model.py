@@ -16,8 +16,4 @@ model.add(Dense(1, activation='sigmoid'))
 # train the model on the dataset
 #model.fit(X_train, y_train, epochs=10, batch_size=32)
 
-a = np.array([[1,1,1,1,1,1,1,1]])
-print(model.weights)
-print(model(a))
-
 model.save("trained_model")
