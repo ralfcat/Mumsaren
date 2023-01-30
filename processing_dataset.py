@@ -1,19 +1,7 @@
 import pandas as pd
+import numpy as np
 
-# Load your data into a DataFrame
-df = pd.read_csv("dataset_bj_removed.csv")
-
-# Get the "player_final_value" column
-dealer_final_value = df['dealer_final_value']
-
-# Go through every element in the column
-for i in range(len(dealer_final_value)):
-    # Check if the value is equal to "['BJ']"
-    if dealer_final_value[i] == "['BJ']":
-        # Replace it with [21]
-        dealer_final_value[i] = [21]
-
-# Update the "player_final_value" column in the dataframe with the modified values
-df['dealer_final_value'] = dealer_final_value
-# Save the modified DataFrame to a new file
-df.to_csv("dataset_bj_removed.csv", index=False)
+df = pd.read_csv("blackjack_sim.csv")
+df = df[["dealer_up", "initial_hand","win"]]
+df["win"] = np.where(df["win"] > 0, 1, 0)
+df.to_csv("newer_dataset1337.csv", index=False)

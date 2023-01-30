@@ -1,42 +1,73 @@
-import pandas as pd
-import numpy as np
 import tensorflow as tf
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder, StandardScaler
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+import numpy as np
 
-# Load the dataset into a Pandas dataframe
-df = pd.read_csv("dataset_bj_removed.csv")
+# Preprocessing the dataset
+dataset = [[10, 1, 1], [9, 9, 0], [5, 8, -2], [1, 10, 1], [8, 8, 0], [10, 10, -2], [7, 7, 0], [1, 10, 1], [5, 5, 0], [10, 5, 1]]
 
-# Define the columns to use for training the model
-columns_to_use = ['dealer_up', 'initial_hand', 'dealer_final', 'dealer_final_value', 'player_final', 'player_final_value', 'actions_taken', 'win']
+# Splitting the dataset into inputs and targets
+inputs = [data[:2] for data in dataset]
+targets = [data[2] for data in dataset]
 
-# Preprocess the categorical variables
-categorical_vars = ['dealer_up', 'initial_hand', 'dealer_final', 'actions_taken']
-for col in categorical_vars:
-    df[col] = LabelEncoder().fit_transform(df[col])
+# Building the model
+model = tf.keras.Sequential([
+  tf.keras.layers.Dense(64, activation='relu', input_shape=(2,)),
+  tf.keras.layers.Dense(64, activation='relu'),
+  tf.keras.layers.Dense(1, activation='linear')
+])
 
-# Normalize the numerical variables
-scaler = StandardScaler()
-df[['dealer_final_value', 'player_final_value']] = scaler.fit_transform(df[['dealer_final_value', 'player_final_value']])
+# Compiling the model
+#model.compile(optimizer='adam', loss='mean_squared_error')
 
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(df[columns_to_use], df['win'], test_size=0.2, random_state=0)
+# Training the model
+#model.fit(inputs, targets, epochs=100, batch_size=10)
 
-# Build the neural network model
-model = Sequential()
-model.add(Dense(64, activation='relu', input_shape=(X_train.shape[1],)))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(1, activation='sigmoid'))
+# Function to map prediction to decision
 
-# Compile the model
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+def get_decision(prediction):
+    if prediction > 0:
+        return "hit"
+    elif prediction == 0:
+        return "stand"
+    elif prediction == -1:
+        return "split"
+    else:
+        return "double"
 
-# Train the model
-history = model.fit(X_train, y_train, epochs=100, batch_size=32, validation_data=(X_test, y_test))
+def get_input_hand(prompt):
+    hand = input(prompt).split()
+    try:
+        hand = [int(x) for x in hand]
+        return np.array(hand, dtype=np.int32)
+    except:
+        print("Invalid input, please enter a valid hand")
+        return get_input_hand(prompt)
 
-# Evaluate the model on the test data
-test_loss, test_accuracy = model.evaluate(X_test, y_test)
-print("Test Loss:", test_loss)
-print("Test Accuracy:", test_accuracy)
+# Getting player's hand and dealer's upcard from the console
+player_hands = [get_input_hand("Enter player's hand: ")]
+dealer_upcard = get_input_hand("Enter dealer's upcard: ")
+
+# Loop to keep making predictions until the decision is not "hit" or "split"
+while True:
+    # Loop over each hand
+    for i, hand in enumerate(player_hands):
+        # Making a prediction
+        prediction = model.predict(np.array([[hand, dealer_upcard]]))[0][0]
+
+        # Mapping the prediction to a decision
+        decision = get_decision(prediction)
+        print("Hand {}: Decision - {}".format(i + 1, decision))
+
+        if decision != "hit" and decision != "split":
+            break
+        elif decision == "hit":
+            player_hands[i] = get_input_hand("Enter player's hand: ")
+            if player_hands[i] == "bust":
+                break
+        else:
+            player_hands.append(get_input_hand("Enter player's hand for split hand: "))
+
+    # Break the loop if all hands have a decision other than "hit" or "split"
+
+    # Break the loop if all hands have a decision other than "hit" or "split"
+    if all([decision != "hit" and decision != "split" for decision in [get_decision(model.predict([[hand, dealer_upcard]])[0][0]) for hand in player_hands]]):
+        break
