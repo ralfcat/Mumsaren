@@ -5,3 +5,10 @@ def count():
         x +=i
     return x
 print(count())
+
+def smallpepe(x):
+    if x < 25: #cm
+        return True
+    else:
+        return False
+print(smallpepe(10))
