@@ -1,10 +1,19 @@
 import pandas as pd
 
-# Load your data into a pandas DataFrame
-df = pd.read_csv("processed_blackjack_dataset.csv")
+# Load your data into a DataFrame
+df = pd.read_csv("dataset_bj_removed.csv")
 
-# Filter the data to only include rows where the value in the 'wins' column is greater than or equal to 0
-df = df[df["win"] >= 0]
+# Get the "player_final_value" column
+dealer_final_value = df['dealer_final_value']
 
-# Save the updated DataFrame to a new file or overwrite the original file
-df.to_csv("processed_blackjack_dataset.csv", index=False)
+# Go through every element in the column
+for i in range(len(dealer_final_value)):
+    # Check if the value is equal to "['BJ']"
+    if dealer_final_value[i] == "['BJ']":
+        # Replace it with [21]
+        dealer_final_value[i] = [21]
+
+# Update the "player_final_value" column in the dataframe with the modified values
+df['dealer_final_value'] = dealer_final_value
+# Save the modified DataFrame to a new file
+df.to_csv("dataset_bj_removed.csv", index=False)

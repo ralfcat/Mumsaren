@@ -7,7 +7,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
 # Load the dataset into a Pandas dataframe
-df = pd.read_csv("blackjack_dataset.csv")
+df = pd.read_csv("dataset_bj_removed.csv")
 
 # Define the columns to use for training the model
 columns_to_use = ['dealer_up', 'initial_hand', 'dealer_final', 'dealer_final_value', 'player_final', 'player_final_value', 'actions_taken', 'win']
