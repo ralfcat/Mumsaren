@@ -1,3 +1,0 @@
-print("fuck off")
-
-#hejollehejolle
