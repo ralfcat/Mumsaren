@@ -1,15 +1,10 @@
 import pandas as pd
 
-# Load your dataset into a Pandas dataframe
-df = pd.read_csv("blackjack_sim.csv")
+# Load your data into a pandas DataFrame
+df = pd.read_csv("processed_blackjack_dataset.csv")
 
+# Filter the data to only include rows where the value in the 'wins' column is greater than or equal to 0
+df = df[df["win"] >= 0]
 
-# Specify the list of columns to keep
-columns_to_keep = ["dealer_up", "initial_hand", "dealer_final", "dealer_final_value", 
-                   "player_final", "player_final_value", "actions_taken", "win"]
-
-# Keep only the specified columns in the dataframe
-df = df[columns_to_keep]
-
-# Save the processed dataframe to a new file
-df.to_csv("processed_blackjack_dataset.csv", index=False)
+# Save the updated DataFrame to a new file or overwrite the original file
+df.to_csv("processed_blackjack_dataset", index=False)
