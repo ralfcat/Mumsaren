@@ -34,7 +34,7 @@ model.add(Dense(5, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Train the model
-model.fit(X_train, Y_train, epochs=100, batch_size=32)
+model.fit(X_train, Y_train, epochs=1, batch_size=32)
 
 # Evaluate the model
 score = model.evaluate(X_test, Y_test)
@@ -53,3 +53,5 @@ def get_action(player_hand, dealer_upcard):
 player_hand = input("Enter player's hand: ")
 dealer_upcard = input("Enter dealer's upcard: ")
 print("Optimal action:", get_action(player_hand, dealer_upcard))
+
+#Not working :(

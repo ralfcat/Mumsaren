@@ -71,3 +71,5 @@ while True:
     # Break the loop if all hands have a decision other than "hit" or "split"
     if all([decision != "hit" and decision != "split" for decision in [get_decision(model.predict([[hand, dealer_upcard]])[0][0]) for hand in player_hands]]):
         break
+
+#Not working :(
