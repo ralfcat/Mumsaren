@@ -16,10 +16,10 @@ model = tf.keras.Sequential([
 ])
 
 # Compiling the model
-#model.compile(optimizer='adam', loss='mean_squared_error')
+model.compile(optimizer='adam', loss='mean_squared_error')
 
 # Training the model
-#model.fit(inputs, targets, epochs=100, batch_size=10)
+model.fit(inputs, targets, epochs=100, batch_size=10)
 
 # Function to map prediction to decision
 
@@ -61,8 +61,7 @@ while True:
             break
         elif decision == "hit":
             player_hands[i] = get_input_hand("Enter player's hand: ")
-            if player_hands[i] == "bust":
-                break
+
         else:
             player_hands.append(get_input_hand("Enter player's hand for split hand: "))
 
